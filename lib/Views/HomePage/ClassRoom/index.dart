@@ -110,9 +110,69 @@ class _IndexForClassRoomState extends State<IndexForClassRoom> {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(15),
-                  child: Image.asset(
-                    'assets/images/4.png',
-                    fit: BoxFit.cover,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      // Video Player
+                        _videoPlayerController!.value.isInitialized
+                         ? InkWell(
+                          onTap: (){
+                              // if (_videoPlayerController!.value.isPlaying) {
+                              //   _videoPlayerController?.pause();
+                              // } else {
+                              //   _videoPlayerController?.play();
+                              // }
+                          },
+                          child: Container(
+                            width: screenUtils.getScreenWidth(context) > 500 ?  screenUtils.getScreenWidth(context) * 0.9 :  screenUtils.getScreenWidth(context) * 0.85,
+                            height: screenUtils.getScreenWidth(context) > 500 ?  280  : 200,
+                            child: VideoPlayer(_videoPlayerController!),
+                          ),
+                        )
+                          : InkWell(
+                          onTap: () {
+                            setState(() {
+                            });
+                          },
+                          child: CircularProgressIndicator(),
+                        ),
+
+                      // Play/Pause Button
+                      Positioned.fill(
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Container(
+                            // height: 60,
+                            // width: 60,
+                            // decoration:BoxDecoration(
+                            //   color: appColors.lightGold,
+                            //   borderRadius: BorderRadius.circular(150)
+                            // ),
+                            child: IconButton(
+                              icon: Center(
+                                child: Icon(
+                                  _videoPlayerController!.value.isPlaying
+                                      ? Icons.pause
+                                      : Icons.play_arrow,
+                                  size: 45,
+                                ),
+                              ),
+                              onPressed: () {
+                                setState(() {
+
+                                    if (_videoPlayerController!.value.isPlaying) {
+                                      _videoPlayerController?.pause();
+                                    } else {
+                                      _videoPlayerController?.play();
+                                    }
+
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -121,7 +181,7 @@ class _IndexForClassRoomState extends State<IndexForClassRoom> {
               if(user == 'learner')
                 Container(
                   margin: EdgeInsets.symmetric(vertical: 20),
-                  width: screenUtils.getScreenWidth(context) * 0.9,
+                  width: screenUtils.getScreenWidth(context) * 0.95,
                   decoration: BoxDecoration(
                     border: Border.all(color: appColors.lightGold),
                     borderRadius: BorderRadius.circular(5),
@@ -130,12 +190,12 @@ class _IndexForClassRoomState extends State<IndexForClassRoom> {
                   child: Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all(15.0),
+                        padding: const EdgeInsets.all(10.0),
                         child: Text('Post your doubts here through text or voice chat',style: TextStyle(fontFamily: 'poppins-medium'),textAlign: TextAlign.center,),
                       ),
                       Divider(color: appColors.lightGold,thickness: 1,height: 1,),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SizedBox(
                               width: screenUtils.getScreenWidth(context) * 0.58,
@@ -144,12 +204,12 @@ class _IndexForClassRoomState extends State<IndexForClassRoom> {
                                 child: TextFormField(
                                   decoration: InputDecoration(
                                       border:InputBorder.none,
-                                    hintText: 'Type your doubts'
+                                    hintText: 'Type your doubts here..'
                                   ),
                                 ),
                               )),
                           Container(
-                            margin: EdgeInsets.all(15),
+                            margin: EdgeInsets.all(10),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(105),
                               color: Color(0xffad9b78),
@@ -174,12 +234,12 @@ class _IndexForClassRoomState extends State<IndexForClassRoom> {
                         ],
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Container(
-                              margin: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
+                              margin: EdgeInsets.only(right: 15,bottom: 5),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(5),
                                 color: Color(0xffad9b78),
@@ -194,47 +254,25 @@ class _IndexForClassRoomState extends State<IndexForClassRoom> {
                                   ),         ],
                               ),
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 30),
+                                padding: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 20),
                                 child: Center(
-                                  child: Text('Post',style: TextStyle(fontFamily: 'poppins-medium',color: Colors.white,fontSize: 17),),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: Colors.white,
-                                border: Border.all(color: Color(0xffad9b78)),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: appColors.Shadow_Clr2,
-                                    offset: const Offset(
-                                      1.0,
-                                      3.0,
-                                    ),
-                                    blurRadius:10.0,
-                                  ),         ],
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 15),
-                                child: Center(
-                                  child: Text('Cancel',style: TextStyle(fontFamily: 'poppins-medium',color: Color(0xffad9b78),fontSize: 17),),
+                                  child: Text('Post question',style: TextStyle(fontFamily: 'poppins-medium',color: Colors.white,fontSize: 17),),
                                 ),
                               ),
                             ),
 
+
                           ],
                         ),
                       ),
-                      SizedBox(height: 10,)
+                      SizedBox(height: 5,)
                     ],
                   ),
                 ),
 
               if(user == 'learner')
                 Container(
-                  margin: EdgeInsets.symmetric(vertical: 15,horizontal: 15),
+                  margin: EdgeInsets.symmetric(vertical: 0,horizontal: 15),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5),
                     color: Color(0xffeeeae3),
@@ -242,7 +280,7 @@ class _IndexForClassRoomState extends State<IndexForClassRoom> {
                   ),
                   alignment: Alignment.centerLeft,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 15.0,horizontal: 15),
+                    padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 15),
                     child: Text('ALL COMMENTS & DISCUSSIONS',style: TextStyle(fontFamily: 'poppins-semibold',color: Colors.black,fontSize: 17),),
                   ),
                 ),

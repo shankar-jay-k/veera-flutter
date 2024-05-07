@@ -10,8 +10,8 @@ class testFile extends StatefulWidget {
 
 class testFileState extends State<testFile> {
   /// also support url like this: 'www.vimeo.com/70591644', 'vimeo.com/70591644'
-  // final String _vimeoVideoUrl = 'https://vimeo.com/70591644';
-  final String _vimeoVideoUrl = 'https://player.vimeo.com/video/841319969';
+    String _vimeoVideoUrl = 'https://vimeo.com/70591644';
+  // final String _vimeoVideoUrl = 'https://player.vimeo.com/video/841319969';
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class testFileState extends State<testFile> {
       backgroundColor: Colors.black,
       body: SafeArea(
         child: VimeoVideoPlayer(
-          url: _vimeoVideoUrl,
+          url: 'https://vimeo.com/70591644',
         ),
       ),
     );
