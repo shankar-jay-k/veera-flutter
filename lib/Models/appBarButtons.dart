@@ -14,12 +14,13 @@ class appBarButton extends StatefulWidget {
 class _appBarButtonState extends State<appBarButton> {
   @override
   Widget build(BuildContext context) {
-    return  InkWell(
+    return  GestureDetector(
       onTap: widget.onTap,
-      splashColor: Colors.grey,
+
       child: Padding(
         padding:EdgeInsets.only(right: screenUtils.getScreenWidth(context) > 500 ? 25 : 15,top:15),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
               decoration: BoxDecoration(
@@ -30,7 +31,7 @@ class _appBarButtonState extends State<appBarButton> {
                     color: appColors.Shadow_Clr2,
                     offset: const Offset(
                       1.0,
-                      3.0,
+                      5.0,
                     ),
                     blurRadius:10.0,
                   ),         ],

@@ -26,12 +26,12 @@ class Footer extends StatelessWidget {
             children: [
               Text(
                 "(c) Copyrights by",
-                style: TextStyle(color: Colors.white,fontFamily: 'poppins-medium',fontSize: 16),
+                style: TextStyle(color: Colors.white,fontFamily: 'poppins-medium',fontSize:screenUtils.getScreenWidth(context) > 500 ? 16 : 14),
               ),
               SizedBox(height: 8,),
               Text(
                 "NJ VEERA’S MISSION EDUCATION PVT LTD",
-                style: TextStyle(color: appColors.lightGold,fontFamily: 'poppins-semibold',fontSize: 17),
+                style: TextStyle(color: appColors.lightGold,fontFamily: 'poppins-semibold',fontSize:screenUtils.getScreenWidth(context) > 500 ? 17 : 15),
               ),
               SizedBox(height: 8,),
               Text(
@@ -47,7 +47,7 @@ class Footer extends StatelessWidget {
               children: [
                 Text(
                   "Mail Us To: ",
-                  style: TextStyle(color: Colors.white,fontFamily: 'poppins-medium',fontSize: 16),
+                  style: TextStyle(color: Colors.white,fontFamily: 'poppins-medium',fontSize:screenUtils.getScreenWidth(context) > 500 ? 16 : 15),
                 ),
                 GestureDetector(
                   onTap: () {
@@ -56,7 +56,7 @@ class Footer extends StatelessWidget {
                   child: Text(
                     "Support@veershindi.com",
                     style: TextStyle(
-                      color: Colors.white,fontFamily: 'poppins-medium',fontSize: 16.5,
+                      color: Colors.white,fontFamily: 'poppins-medium',fontSize:screenUtils.getScreenWidth(context) > 500 ? 16.5 : 14,
                       decoration: TextDecoration.underline,
                     ),
                   ),

@@ -1,3 +1,4 @@
+import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:veera_education_flutter/Controllers/Colors.dart';
 import 'package:video_player/video_player.dart';
@@ -14,28 +15,28 @@ class _VeeraMethodWorksState extends State<VeeraMethodWorks> {
 
   double width = 0;
   bool showVideo = false;
+  late FlickManager flickManager;
 
-  late VideoPlayerController _videoPlayerController;
   @override
   void initState() {
+
     super.initState();
-    _videoPlayerController = VideoPlayerController.asset(
-        'assets/Videoes/home.mp4')
-      ..initialize().then((_) {
-        setState(() {});
-      });
-    _videoPlayerController.addListener(() {
-      if (_videoPlayerController.value.position == _videoPlayerController.value.duration) {
+    flickManager = FlickManager(
+      autoPlay: false,
+      onVideoEnd: (){
         setState(() {
-          showVideo = !showVideo;
+          showVideo != showVideo;
         });
-      }
-    });
+      },
+      videoPlayerController:
+      VideoPlayerController.asset('assets/Videoes/home.mp4'),
+    );
   }
 
   @override
   void dispose() {
-    _videoPlayerController.dispose();
+    flickManager.flickControlManager?.pause(); // Pause the video
+    flickManager.dispose();
     super.dispose();
   }
 
@@ -79,7 +80,6 @@ class _VeeraMethodWorksState extends State<VeeraMethodWorks> {
                 ),
               ),
               Container(
-
                 width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(bottomLeft: Radius.circular(12),bottomRight: Radius.circular(12)),
@@ -106,40 +106,32 @@ class _VeeraMethodWorksState extends State<VeeraMethodWorks> {
                                 children: [
                                   // Video Player
                                   if (showVideo)
-                                    _videoPlayerController!.value.isInitialized
-                                   ? InkWell(
-                                      onTap: (){
-                                        if (showVideo) {
-                                          if (_videoPlayerController!.value.isPlaying) {
-                                            _videoPlayerController?.pause();
-                                          } else {
-                                            _videoPlayerController?.play();
-                                          }
-                                        } else {
-                                          showVideo = true;
-                                          _videoPlayerController?.play();
-                                        }
-                                      },
-                                     child: Container(
-                                       width: screenUtils.getScreenWidth(context) > 500 ?  width * 0.9 :  width * 0.85,
-                                       height: screenUtils.getScreenWidth(context) > 500 ?  280  : 200,
-                                        child: VideoPlayer(_videoPlayerController!),
-                                      ),
-                                   )
-                                   : InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          showVideo = !showVideo;
-                                        });
-                                      },
-                                      child: CircularProgressIndicator(),
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(15),
+                                      child: Container(
+                                         width: screenUtils.getScreenWidth(context) > 500 ?  width * 0.9 :  width * 0.85,
+                                          child:  FlickVideoPlayer(
+                                            flickManager: flickManager,
+                                            flickVideoWithControls: FlickVideoWithControls(
+
+                                              controls: FlickPortraitControls(),
+                                              playerLoadingFallback: Center(
+                                                child: CircularProgressIndicator(),
+                                              ),
+                                            ),
+                                            flickVideoWithControlsFullscreen: FlickVideoWithControls(
+                                              controls: FlickLandscapeControls(),
+                                            ),
+
+                                          ),
+                                        ),
                                     )
                                   else
                                     InkWell(
                                       onTap: () {
                                         setState(() {
                                           showVideo = !showVideo;
-                                          _videoPlayerController?.play();
+                                          flickManager.flickControlManager?.play();
                                         });
                                       },
                                       child: Image.asset(
@@ -150,33 +142,33 @@ class _VeeraMethodWorksState extends State<VeeraMethodWorks> {
                                     ),
 
                                   // Play/Pause Button
-                                  Positioned.fill(
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: IconButton(
-                                        icon: Icon(
-                                          showVideo && _videoPlayerController!.value.isPlaying
-                                              ? Icons.pause
-                                              : Icons.play_arrow,
-                                          size: 45,
-                                        ),
-                                        onPressed: () {
-                                          setState(() {
-                                            if (showVideo) {
-                                              if (_videoPlayerController!.value.isPlaying) {
-                                                _videoPlayerController?.pause();
-                                              } else {
-                                                _videoPlayerController?.play();
-                                              }
-                                            } else {
-                                              showVideo = true;
-                                              _videoPlayerController?.play();
-                                            }
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                  ),
+                                  // Positioned.fill(
+                                  //   child: Align(
+                                  //     alignment: Alignment.center,
+                                  //     child: IconButton(
+                                  //       icon: Icon(
+                                  //         showVideo && _videoPlayerController!.value.isPlaying
+                                  //             ? Icons.pause
+                                  //             : Icons.play_arrow,
+                                  //         size: 45,
+                                  //       ),
+                                  //       onPressed: () {
+                                  //         setState(() {
+                                  //           if (showVideo) {
+                                  //             if (_videoPlayerController!.value.isPlaying) {
+                                  //               _videoPlayerController?.pause();
+                                  //             } else {
+                                  //               _videoPlayerController?.play();
+                                  //             }
+                                  //           } else {
+                                  //             showVideo = true;
+                                  //             _videoPlayerController?.play();
+                                  //           }
+                                  //         });
+                                  //       },
+                                  //     ),
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                             ),

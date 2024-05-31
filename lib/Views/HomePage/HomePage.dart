@@ -1,21 +1,31 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:http/http.dart' as  http;
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:veera_education_flutter/Controllers/Colors.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:veera_education_flutter/Controllers/apiCalls.dart';
+import 'package:veera_education_flutter/Models/CurvedUnderLine.dart';
+import 'package:veera_education_flutter/Models/LoadingWidget.dart';
+import 'package:veera_education_flutter/Views/Auth/SplashScreen.dart';
 import 'package:veera_education_flutter/Views/HomePage/ClassRoom/index.dart';
 import 'package:veera_education_flutter/Views/HomePage/Footer.dart';
 import 'package:veera_education_flutter/Views/HomePage/OurJourney.dart';
 import 'package:veera_education_flutter/Views/HomePage/PlanDetails.dart';
 import 'package:veera_education_flutter/Models/Toasts.dart';
 import 'package:veera_education_flutter/Models/appBarButtons.dart';
-import 'package:veera_education_flutter/testFile.dart';
+import 'package:platform_device_id/platform_device_id.dart';
 import 'DemoClassCards.dart';
 import 'VeeraMethodWorks.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'dart:io';
 
 
+final userStorage = GetStorage();
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -28,27 +38,60 @@ class _HomePageState extends State<HomePage> {
   int _currentIndex= 0;
   late QRViewController controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  String? deviceId = '';
 
+  String deviceName = 'Unknown';
+  String osVersion = 'Unknown';
+  String osType = 'Unknown';
+
+  @override
+  void initState() {
+         // use this for getting unique device id,comment-out to use
+         // functionToGetDeviceId();
+         // initDeviceInfo();
+    super.initState();
+  }
+
+  Future<void> initDeviceInfo() async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    if (Platform.isAndroid) {
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      setState(() {
+        deviceName = androidInfo.model ?? 'Unknown';
+        osVersion = 'Android ${androidInfo.version.release}';
+        osType = 'Android';
+      });
+    } else if (Platform.isIOS) {
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      setState(() {
+        deviceName = iosInfo.utsname.machine ?? 'Unknown';
+        osVersion = '${iosInfo.systemName} ${iosInfo.systemVersion}';
+        osType = 'iOS';
+      });
+    }
+  }
   @override
   void dispose() {
     controller.dispose();
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
+    // userStorage.erase();
+    //  print('userData : ${userStorage.read('token')}');
+    print('deviceName:${deviceName} , osVersion:${osVersion} , osType:${osType}');
     return Scaffold(
       backgroundColor: appColors.scaffold,
       appBar: AppBar(
-        toolbarHeight: 80,
+        toolbarHeight: 85,
         backgroundColor: Colors.white,
         elevation: 6,
         leading: Padding(
-          padding: const EdgeInsets.only(top: 8.0),
+          padding: const EdgeInsets.only(top: 8.0,left: 25),
           child: Image.asset(
             'assets/images/newLogo.png',
-            width: MediaQuery.of(context).size.width * 0.45,
+            width: MediaQuery.of(context).size.width * 0.43,
 
             fit: BoxFit.contain,
           ),
@@ -56,13 +99,16 @@ class _HomePageState extends State<HomePage> {
         leadingWidth: MediaQuery.of(context).size.width * 0.5,
 
       actions: [
+         if(userStorage.read('paidUser') != null && userStorage.read('paidUser')) 
           appBarButton(
               title: 'Scan',
               icon: Icon(Icons.qr_code_scanner_outlined, color: Colors.black,),
               onTap: (){
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => QRViewExample(),
+                  builder: (context) => QRScanner(),
                 ));
+
+
               }
           ),
           appBarButton(
@@ -74,9 +120,22 @@ class _HomePageState extends State<HomePage> {
               title: 'Profile',
               icon: Icon(Icons.account_circle_outlined, color: Colors.black,),
               onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => testFile(),
-                ));
+               showDialog(
+                   context: context,
+                   builder: (context)=>AlertDialog(
+                     content: Text('Are you sure to logout?',style: TextStyle(fontFamily: 'Poppins-SemiBold'),),
+                     actions: [
+                       MaterialButton(color: Colors.red,child: Text('Cancel',style: TextStyle(fontFamily: 'Poppins-Medium',color: Colors.white),),onPressed: (){Navigator.of(context).pop();}),
+                       MaterialButton(color: Colors.green,child: Text('Logout',style: TextStyle(fontFamily: 'Poppins-Medium',color: Colors.white),),onPressed: (){
+                         Navigator.of(context).pop();
+                         userStorage.erase();
+                         Navigator.of(context).pushReplacement(MaterialPageRoute(
+                           builder: (context) => SplashScreen(),
+                         ));
+                       }),
+                     ],
+                   ));
+
               }
           ),
         ],
@@ -86,7 +145,23 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
 
-            SizedBox(height: 5,),
+
+           userStorage.read('paidUser') != null &&  userStorage.read('paidUser') ?
+           SizedBox(
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 20.0,bottom: 10,left: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Hello Tamizh,',style: TextStyle(fontFamily: 'Poppins-Bold',fontSize: 18),),
+                    Text('Welcome to the Dashboard,',style: TextStyle(fontSize: 20,fontFamily: 'Poppins-SemiBold',color: Colors.grey),),
+                  ],
+                ),
+              ),
+            )
+            : SizedBox(height: 10,),
+
             CarouselSlider.builder(
               itemCount: 3,
               itemBuilder: (BuildContext context, int index, int realIndex) {
@@ -128,7 +203,9 @@ class _HomePageState extends State<HomePage> {
             ),
 
             ///This is how Veera's  method works
-            VeeraMethodWorks(),
+            userStorage.read('paidUser') != null && userStorage.read('paidUser')
+                ? Container()
+                : VeeraMethodWorks(),
 
             ///Demo class section
              Container(
@@ -153,9 +230,15 @@ class _HomePageState extends State<HomePage> {
                  padding: const EdgeInsets.symmetric(vertical: 20.0),
                  child: Column(
                    children: [
-                     Text('DEMO CLASS',style: TextStyle(fontSize: 17,color:Colors.black,fontFamily: 'poppins-bold',letterSpacing: 1.5),),
-                     Divider(thickness: 4,color: appColors.lightGold,endIndent: 150,indent: 155,),
-                     SizedBox(height: 15,),
+                     userStorage.read('paidUser') != null && userStorage.read('paidUser')
+                         ? Text('Our Special Features',style: TextStyle(color:Colors.black,fontFamily: 'apple-chancery',fontWeight: FontWeight.w800,fontSize: 19,letterSpacing: 1.5),)
+                         : Text('DEMO CLASS',style: TextStyle( color:Colors.black,fontFamily: 'apple-chancery',fontWeight: FontWeight.w800,fontSize: 19,letterSpacing: 1.5),),
+                     SizedBox(height: 8,),
+                     CurvedDivider(
+                       color: appColors.lightGold,
+                       height: 10.0,
+                     ),
+                     SizedBox(height: 10,),
 
                      InkWell(
                          onTap: (){
@@ -238,10 +321,15 @@ class _HomePageState extends State<HomePage> {
              ),
 
             ///plan details
-            PlanDetails(),
+            userStorage.read('paidUser') != null && userStorage.read('paidUser')
+                ? Container()
+                : PlanDetails(),
+
 
             ///our journey
-            OurJourney(),
+            userStorage.read('paidUser') != null && userStorage.read('paidUser')
+                ? Container()
+                : OurJourney(),
 
 
             ///footer
@@ -251,6 +339,15 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+   functionToGetDeviceId() async {
+     String? dId = await PlatformDeviceId.getDeviceId;
+     deviceId = dId;
+     setState(() {
+
+     });
+     print('Device Id :${deviceId}');
+   }
 }
 
 
@@ -302,17 +399,18 @@ class DotIndicator extends StatelessWidget {
   }
 }
 
-class QRViewExample extends StatefulWidget {
-  const QRViewExample({Key? key}) : super(key: key);
+class QRScanner extends StatefulWidget {
+  const QRScanner({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _QRViewExampleState();
+  State<StatefulWidget> createState() => _QRScannerState();
 }
 
-class _QRViewExampleState extends State<QRViewExample> {
+class _QRScannerState extends State<QRScanner> {
   Barcode? result;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  String token = userStorage.read('token');
 
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
@@ -331,7 +429,6 @@ class _QRViewExampleState extends State<QRViewExample> {
       backgroundColor: appColors.scannerBg,
       body: Column(
         children: <Widget>[
-
           Expanded(flex: 4, child: _buildQrView(context)),
 
         ],
@@ -343,8 +440,8 @@ class _QRViewExampleState extends State<QRViewExample> {
     // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
     var scanArea = (MediaQuery.of(context).size.width < 400 ||
         MediaQuery.of(context).size.height < 400)
-        ? 150.0
-        : 320.0;
+        ? 250.0
+        : 350.0;
     // To ensure the Scanner view is properly sizes after rotation
     // we need to listen for Flutter SizeChanged notification and update controller
     return QRView(
@@ -356,24 +453,59 @@ class _QRViewExampleState extends State<QRViewExample> {
           overlayColor: appColors.scannerBg,
           borderLength: 60,
           borderWidth: 20,
-          cutOutBottomOffset: 50,
+          cutOutBottomOffset: 80,
           cutOutSize: scanArea),
       onPermissionSet: (ctrl, p) => _onPermissionSet(context, ctrl, p),
     );
   }
 
-  void _onQRViewCreated(QRViewController controller) {
+  void _onQRViewCreated(QRViewController controller) async{
+
     setState(() {
       this.controller = controller;
     });
     controller.scannedDataStream.listen((scanData) {
-      successtoast('Qr scanned data : ${scanData}');
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (context)=> HomePage())
-    );
+      // Print the scanned data
+      print('scanned Data ${scanData.code}');
+
+      // Parse the JSON string into a Map
+      Map<String, dynamic> code = jsonDecode(scanData.code ?? '');
+
+
+       functionToSendLoginDetails(code);
     });
   }
+  functionToSendLoginDetails(code)async{
+    controller?.dispose();
+    startLoading(context);
 
+    Map<String, dynamic> body = {
+      "channel": "${code['hashedData']}",
+    };
+    var responseData = await http.post(Uri.parse('https://veeras-edu-api.onrender.com/auth/signin-qr'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization' : 'Bearer $token'
+      },
+      body: jsonEncode(body), // Encode the body as JSON string
+    );
+
+    Map<String, dynamic> response = json.decode(responseData.body);
+      print('response from qr sign-in qr Api : ${response}');
+    if(response['meta']['code']  == 200){
+      stopLoading(context);
+      successToast('${response['meta']['message']}');
+      showScannedDataDetails(code);
+      // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>HomePage()));
+      setState(() {});
+    }
+    else{
+      stopLoading(context);
+      errorToast('${response['meta']['message']}');
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>HomePage()));
+    }
+
+  }
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
     log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
     if (!p) {
@@ -388,4 +520,97 @@ class _QRViewExampleState extends State<QRViewExample> {
     controller?.dispose();
     super.dispose();
   }
+
+   showScannedDataDetails(code) {
+     controller?.dispose();
+    showDialog(
+        context: context,
+        builder: (context)=>AlertDialog(
+          title: Text('Confirmation',style: TextStyle(fontFamily: 'Poppins-SemiBold',decoration: TextDecoration.underline),),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('IP address',style: TextStyle(fontFamily: 'Poppins-Light' ),),
+                    Text('${code['details']['ip']}',style: TextStyle(fontFamily: 'Poppins-Medium'),),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Location',style: TextStyle(fontFamily: 'Poppins-Light' ),),
+                    Text('${getTextBeforeComma(code['details']['location'])}',style: TextStyle(fontFamily: 'Poppins-Medium'),),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Browser',style: TextStyle(fontFamily: 'Poppins-Light' ),),
+                    Text('${code['details']['browser']}',style: TextStyle(fontFamily: 'Poppins-Medium'),),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            MaterialButton(color: Colors.red,child: Text('Cancel',style: TextStyle(fontFamily: 'Poppins-Medium',color: Colors.white),),onPressed: (){
+              Navigator.of(context).pop();
+              startLoading(context);
+              functionToAuthorizeApp(false,code);
+            }),
+            MaterialButton(color: Colors.green,child: Text('Authorize',style: TextStyle(fontFamily: 'Poppins-Medium',color: Colors.white),),onPressed: (){
+              Navigator.of(context).pop();
+              startLoading(context);
+              functionToAuthorizeApp(true,code);
+            }),
+          ],
+        ));
+   }
+
+   functionToAuthorizeApp(isType,code) async {
+     startLoading(context);
+
+     Map<String, dynamic> body = {
+       "channel": "${code['hashedData']}",
+       "isApprove" : isType
+     };
+     var responseData = await http.post(Uri.parse('https://veeras-edu-api.onrender.com/auth/authorize-qr'),
+       headers: <String, String>{
+         'Content-Type': 'application/json; charset=UTF-8',
+         'Authorization' : 'Bearer $token'
+       },
+       body: jsonEncode(body), // Encode the body as JSON string
+     );
+
+     Map<String, dynamic> response = json.decode(responseData.body);
+     print('response from qr authorize qr Api : ${response},   token is ${token}');
+     if(response['meta']['code']  == 200){
+       stopLoading(context);
+       successToast('${response['meta']['message']}');
+
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>HomePage()));
+       setState(() {});
+     }
+     else{
+       stopLoading(context);
+       errorToast('Failed to authorize');
+       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>HomePage()));
+     }
+
+   }
+  String getTextBeforeComma(String input) {
+    List<String> parts = input.split(',');
+    return parts.isNotEmpty ? parts[0].trim() : '';
+  }
+
 }

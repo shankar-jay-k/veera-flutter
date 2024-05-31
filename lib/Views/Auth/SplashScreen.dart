@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:veera_education_flutter/Views/Auth/GetStarted.dart';
+import 'package:veera_education_flutter/Views/HomePage/HomePage.dart';
 
-import '../HomePage/HomePage.dart';
 
+final userStorage = GetStorage();
 class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -27,10 +29,17 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
     // Navigate to home page after 3 seconds
      Future.delayed(Duration(seconds: 3), () {
-       Navigator.of(context).pushReplacement(MaterialPageRoute(
-         builder: (context) => GetStarted(),
-       ));
-     });
+       if(userStorage.read('userData') != null){
+         Navigator.of(context).pushReplacement(MaterialPageRoute(
+           builder: (context) => HomePage(),
+         ));
+       }
+       else{
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => GetStarted(),
+        ));
+      }
+    });
 
   }
 

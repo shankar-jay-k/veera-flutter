@@ -16,7 +16,7 @@ class OurJourney extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Text('OUR JOURNEY',style: TextStyle(fontSize: 17,fontFamily: 'poppins-bold',letterSpacing: 2),),
+          Text('OUR JOURNEY',style: TextStyle(fontFamily: 'apple-chancery',fontWeight: FontWeight.w800,fontSize: 19,letterSpacing: 2),),
           SizedBox(height: 25,),
           journeyDetails('Veera’s institute was established','2009',true),
           journeyDetails('Veera’s institute was born & made of its first video \n recording on DVD,s but unable to launch','2012',true),

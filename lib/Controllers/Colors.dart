@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 class appColors {
-
-
   static const Color scaffold = Color(0xfff7f7f7);
   static const Color ashGrey = Color(0xffd9d9d9);
   static const Color scannerBg = Color(0xd0d9d9d9);
@@ -12,7 +10,6 @@ class appColors {
   static const Color error = Color.fromARGB(255, 255, 4, 4);
   static const Color success = Color.fromARGB(255, 30, 226, 27);
   static const Color white=Colors.white;
-
 }
 class screenUtils {
   static double getScreenWidth(BuildContext context) {
