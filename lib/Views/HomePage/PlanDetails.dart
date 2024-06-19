@@ -108,6 +108,7 @@ class _PlanDetailsState extends State<PlanDetails> {
       openGateway(jsonDecode(res.body)['id']);
     }
     print(res.body);
+    stopLoading(context);
   }
 
   openGateway(String orderId) {
@@ -218,150 +219,258 @@ class _PlanDetailsState extends State<PlanDetails> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Column(
-                    children: [
-                      Text('Popular',style: TextStyle(fontFamily: 'poppins-medium',fontSize: 15),),
-                      InkWell(
-                        onTap: (){
-                          chosenPlanTotal = 0;
-                          chosenPlan = '1';
-                          int price = int.parse(chosenPlan);
-                          chosenPlanTotal = 830 * price;
-                          chosenPlanGst = (chosenPlanTotal * 18) / 100;
-                          total = chosenPlanGst + chosenPlanTotal;
-                          setState(() {
+                  InkWell(
+                    onTap: (){
+                      chosenPlanTotal = 0;
+                      chosenPlan = '1';
+                      int price = int.parse(chosenPlan);
+                      chosenPlanTotal = 830 * price;
+                      chosenPlanGst = (chosenPlanTotal * 18) / 100;
+                      total = chosenPlanGst + chosenPlanTotal;
+                      setState(() {
+                      });
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(top: 5),
+                      width: MediaQuery.of(context).size.width * 0.32,
 
-                          });
-                        },
-                        child: Container(
-                          margin: EdgeInsets.only(top: 5),
-                          width: MediaQuery.of(context).size.width * 0.43,
-                          height:200,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            color: Colors.white,
-                            border: Border.all(color: chosenPlan == '1' ?  appColors.lightGold : appColors.Shadow_Clr2 ,width: 2),
-                           boxShadow: [
-                            chosenPlan == '1' ?
-                            BoxShadow(
-                                color: Colors.black,
-                                offset: const Offset(
-                                  5.0,
-                                  12.0,
-                                ),
-                                blurRadius:1.0,
-                                spreadRadius: 2
-                            )
-                            : BoxShadow(
-                                color: appColors.Shadow_Clr2,
-                                offset: const Offset(
-                                  1.0,
-                                  3.0,
-                                ),
-                                blurRadius:10.0,
-                              ),],
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: chosenPlan == '1' ?  [appColors.lightGold,appColors.lightGold,] : [Colors.white,Colors.white,] ,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(color: chosenPlan == '1' ?  appColors.lightGold : appColors.Shadow_Clr2 ,width: 2),
+                       boxShadow: [
+                        BoxShadow(
+                            color:chosenPlan == '1' ?  Colors.brown : Colors.black54,
+                            offset: const Offset(
+                              0.0,
+                              12.0,
                             ),
-                          ),
-                          child: Column(
-                            children: [
-                              SizedBox(height: 10,),
-                              Padding(
-                                padding: const EdgeInsets.all(0.0),
-                                child: Text('1 Month plan',style: TextStyle(fontFamily: 'poppins-semibold'),),
-                              ),
-                              Divider(color:chosenPlan == '1' ? Colors.white : Colors.grey[300],thickness: 1),
-                              SizedBox(height: 10,),
-                              Text('₹ 830',style: TextStyle(fontSize:24,fontFamily: 'Poppins-SemiBold'),),
-                              SizedBox(height: 10,),
-                              Text('INR / month',style: TextStyle(fontFamily: 'poppins-semibold'),),
-                              SizedBox(height: 15,),
-
-                            ],
-                          ),
-                        ),
+                            blurRadius:0.0,
+                            spreadRadius: 0
+                          )
+                        ],
+                        color: chosenPlan == '1' ? appColors.lightGold : Color(0xffededed),
                       ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Container(
-                          decoration: BoxDecoration(
-                            color: Color(0xffd4ffd9),
-                            border: Border.all(color: Color(0xff219b2d)),
-                            borderRadius: BorderRadius.circular(5)
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Text('Monthly Fee Plan',style: TextStyle(fontFamily: 'poppins-semibold'),textAlign: TextAlign.center),
                           ),
-                          child: Text('  Most popular  ',style: TextStyle(fontFamily: 'poppins-medium',color: Colors.black,fontSize: 15,),)),
-                      InkWell(
-                        onTap: (){
-                          chosenPlanTotal = 0;
-                          chosenPlan = '5';
-                          int price = int.parse(chosenPlan);
-                          chosenPlanTotal = 830 * price;
-                          chosenPlanGst = (chosenPlanTotal * 18) / 100;
-                          total = chosenPlanGst + chosenPlanTotal;
-                          setState(() {
+                          // Divider(color:chosenPlan == '1' ? Colors.white : Colors.grey[300],thickness: 1),
+                          Container(
+                            width: double.infinity,
+                            height:160,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.vertical(bottom: Radius.circular(15))
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
 
-                          });
-                        },
-                        child: Container(
-                          margin: EdgeInsets.only(top: 10),
-                          width: MediaQuery.of(context).size.width * 0.43,
-                          height:200,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
+                                Padding(
+                                  padding:   EdgeInsets.only(top: 15.0,left: screenUtils.getScreenWidth(context) > 500 ? 15 : 8),
+                                  child:
+                                  Text('₹ 830 / month',style: TextStyle(fontSize: screenUtils.getScreenWidth(context) > 500 ? 20 : 16,fontFamily: 'Poppins-SemiBold'),),
 
-                            border: Border.all(color: chosenPlan == '5' ?  appColors.lightGold : appColors.Shadow_Clr2 ,width: 2),
+                                ),
 
-                            boxShadow: [
-                              chosenPlan == '5' ?
-                              BoxShadow(
-                                  color: Colors.black,
-                                  offset: const Offset(
-                                    5.0,
-                                    12.0,
+                                SizedBox(),
+                                Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 10),
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.brown),
+                                      borderRadius: BorderRadius.circular(25)
                                   ),
-                                  blurRadius:1.0,
-                                  spreadRadius: 2
-                              )
-                                  : BoxShadow(
-                                color: appColors.Shadow_Clr2,
-                                offset: const Offset(
-                                  1.0,
-                                  3.0,
-                                ),
-                                blurRadius:10.0,
-                              ),],
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: chosenPlan == '5' ? [appColors.lightGold,appColors.lightGold] : [Colors.white,Colors.white],
+                                  child: Padding(
+                                    padding: EdgeInsets.all( screenUtils.getScreenWidth(context) > 500 ? 8.0 : 3),
+                                    child: Center(
+                                      child: Text('SUBSCRIBE',style:TextStyle(fontSize: screenUtils.getScreenWidth(context) > 500 ? 14 : 12)),
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
                           ),
-                          child: Column(
-                            children: [
-                              SizedBox(height: 10,),
-                              Padding(
-                                padding: const EdgeInsets.all(0.0),
-                                child: Text('5 Months plan',style: TextStyle(fontFamily: 'poppins-semibold'),),
-                              ),
-                              Divider(color:chosenPlan == '5' ? Colors.white : Colors.grey[300],thickness: 1),
-                              SizedBox(height: 10,),
-                              Text('₹ 830',style: TextStyle(fontSize:24,fontFamily: 'Poppins-SemiBold'),),
-                              SizedBox(height: 10,),
-                              Text('INR / month',style: TextStyle(fontFamily: 'poppins-semibold'),),
-                              Text('+',style: TextStyle(fontSize:24,fontFamily: 'poppins-medium'),),
-                              Text('1 month extra',style: TextStyle(fontFamily: 'poppins-bold'),),
-                              SizedBox(height: 15,),
 
-                            ],
-                          ),
-                        ),
+                        ],
                       ),
-                    ],
+                    ),
+                  ),
+                  InkWell(
+                    onTap: (){
+                      chosenPlanTotal = 0;
+                      chosenPlan = '5';
+                      int price = int.parse(chosenPlan);
+                      chosenPlanTotal = 830 * price;
+                      chosenPlanGst = (chosenPlanTotal * 18) / 100;
+                      total = chosenPlanGst + chosenPlanTotal;
+                      setState(() {
+
+                      });
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(top: 5),
+                      width: MediaQuery.of(context).size.width * 0.32,
+
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(color: chosenPlan == '5' ?  appColors.lightGold : appColors.Shadow_Clr2 ,width: 2),
+                        boxShadow: [
+
+                          BoxShadow(
+                              color:chosenPlan == '5' ?  Colors.brown : Colors.black54,
+                              offset: const Offset(
+                                0.0,
+                                12.0,
+                              ),
+                              blurRadius:0.0,
+                              spreadRadius: 0
+                          )
+                        ],
+                        color: chosenPlan == '5' ? appColors.lightGold : Color(0xffededed),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Text('Extendable Plan 1',style: TextStyle(fontFamily: 'poppins-semibold'),textAlign: TextAlign.center),
+                          ),
+                          // Divider(color:chosenPlan == '1' ? Colors.white : Colors.grey[300],thickness: 1),
+                          Container(
+                            width: double.infinity,
+                            height:160,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.vertical(bottom: Radius.circular(15))
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+
+                                Padding(
+                                  padding:   EdgeInsets.only(top: 15.0,left: screenUtils.getScreenWidth(context) > 500 ? 15 : 8),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text('₹ 830 / month',style: TextStyle(fontSize: screenUtils.getScreenWidth(context) > 500 ? 20 : 16,fontFamily: 'Poppins-SemiBold'),),
+                                      SizedBox(height: 5,),
+                                      Text('Pay 5 months & Get 1 month period free',style: TextStyle(fontSize:13,),),
+                                    ],
+                                  ),
+                                ),
+
+                                Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 10),
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.brown),
+                                      borderRadius: BorderRadius.circular(25)
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.all( screenUtils.getScreenWidth(context) > 500 ? 8.0 : 3),
+                                    child: Center(
+                                      child: Text('SUBSCRIBE',style:TextStyle(fontSize: screenUtils.getScreenWidth(context) > 500 ? 14 : 12)),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+
+                        ],
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: (){
+                      chosenPlanTotal = 0;
+                      chosenPlan = '10';
+                      int price = int.parse(chosenPlan);
+                      chosenPlanTotal = 830 * price;
+                      chosenPlanGst = (chosenPlanTotal * 18) / 100;
+                      total = chosenPlanGst + chosenPlanTotal;
+                      setState(() {
+
+                      });
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(top: 5),
+                      width: MediaQuery.of(context).size.width * 0.32,
+
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(color: chosenPlan == '10' ?  appColors.lightGold : appColors.Shadow_Clr2 ,width: 2),
+                        boxShadow: [
+
+                          BoxShadow(
+                              color:chosenPlan == '10' ?  Colors.brown : Colors.black54,
+                              offset: const Offset(
+                                0.0,
+                                12.0,
+                              ),
+                              blurRadius:0.0,
+                              spreadRadius: 0
+                          )
+                        ],
+                        color: chosenPlan == '10' ? appColors.lightGold : Color(0xffededed),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Text('Extendable Plan 2',style: TextStyle(fontFamily: 'poppins-semibold'),textAlign: TextAlign.center,),
+                          ),
+                          // Divider(color:chosenPlan == '1' ? Colors.white : Colors.grey[300],thickness: 1),
+                          Container(
+                            width: double.infinity,
+                            height:160,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.vertical(bottom: Radius.circular(15))
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+
+                                Padding(
+                                  padding:   EdgeInsets.only(top: 15.0,left: screenUtils.getScreenWidth(context) > 500 ? 15 : 8),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text('₹ 830 / month',style: TextStyle(fontSize: screenUtils.getScreenWidth(context) > 500 ? 20 : 16,fontFamily: 'Poppins-SemiBold'),),
+                                      SizedBox(height: 5,),
+                                      Text('Pay 10 months & Get 5 month period free',style: TextStyle(fontSize:13,),),
+                                    ],
+                                  ),
+                                ),
+
+                                Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 10),
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.brown),
+                                      borderRadius: BorderRadius.circular(25)
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.all( screenUtils.getScreenWidth(context) > 500 ? 8.0 : 3),
+                                    child: Center(
+                                      child: Text('SUBSCRIBE',style:TextStyle(fontSize: screenUtils.getScreenWidth(context) > 500 ? 14 : 12)),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+
+                        ],
+                      ),
+                    ),
+
                   ),
                 ],
               )
@@ -444,6 +553,7 @@ class _PlanDetailsState extends State<PlanDetails> {
                   MaterialButton(
                       color: appColors.lightGold,
                       onPressed: (){
+                        startLoading(context);
                         createOrder();
                       },
                       child: Text('PAY NOW',style: TextStyle(fontSize: 17,fontFamily: 'poppins-semibold',letterSpacing: 2,color: Colors.black),)                      ,)

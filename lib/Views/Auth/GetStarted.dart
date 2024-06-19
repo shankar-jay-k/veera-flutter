@@ -61,7 +61,7 @@ class GetStarted extends StatelessWidget {
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => LoginScreen(),
+                builder: (context) => LoginScreen(resendPhoneNumber: '', ),
               ));
             },
             child: Text('Get Started',style: TextStyle(fontFamily: 'poppins-semibold',color:Colors.black,letterSpacing: 2),),

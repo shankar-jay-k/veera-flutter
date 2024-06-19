@@ -12,6 +12,7 @@ import 'package:http/http.dart' as http;
 import '../../Controllers/apiCalls.dart';
 import '../../Models/LoadingWidget.dart';
 import '../../Models/Toasts.dart';
+import 'LoginPage.dart';
 
 final userStorage = GetStorage();
 class OtpPage extends StatefulWidget {
@@ -87,10 +88,10 @@ class _OtpPageState extends State<OtpPage> {
           child: Container(
             height: MediaQuery.of(context).size.height,
             child: Column(
-
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+
 
                 // First part: Image
                 Image.asset(
@@ -101,7 +102,7 @@ class _OtpPageState extends State<OtpPage> {
                 ),
 
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 88.0),
+                  padding: const EdgeInsets.only(bottom: 8.0),
                   child: Column(
                     children: [
                       Text(
@@ -120,6 +121,7 @@ class _OtpPageState extends State<OtpPage> {
                       ),
                       SizedBox(height: 35,),
                       Pinput(
+                        autofocus: true,
                         length: 6,
                         controller: pinController,
                         focusNode: focusNode,
@@ -170,31 +172,44 @@ class _OtpPageState extends State<OtpPage> {
                           border: Border.all(color: Colors.redAccent),
                         ),
                       ),
+
                     ],
                   ),
                 ),
-
-                ElevatedButton(
-                  onPressed: () {
-                    if(pinController.text.length != 0 && pinController.text.length == 6){
-                      startLoading(context);
-                      functionToVerifyOtp();
-
-                    }
-                      focusNode.unfocus();
-                      formKey.currentState!.validate();
-
-                  },
-                  child: Text('Validate',style: TextStyle(fontFamily: 'poppins-bold',fontSize: 18,color:Colors.black,letterSpacing: 2,),),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: appColors.lightGold,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+                Column(
+                  children: [
+                    TextButton(
+                      onPressed: (){
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => LoginScreen(resendPhoneNumber: widget.phoneNumber),
+                        ));
+                      },
+                      child: Text('Resend OTP?',style: TextStyle(fontSize: 17),),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-                  ),
+
+                    ElevatedButton(
+                      onPressed: () {
+                        if(pinController.text.length != 0 && pinController.text.length == 6){
+                          startLoading(context);
+                          functionToVerifyOtp();
+
+                        }
+                          focusNode.unfocus();
+                          formKey.currentState!.validate();
+
+                      },
+                      child: Text('Validate',style: TextStyle(fontFamily: 'poppins-bold',fontSize: 18,color:Colors.black,letterSpacing: 2,),),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: appColors.lightGold,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                      ),
+                    ),
+                    SizedBox(height: 35,),
+                  ],
                 ),
-                SizedBox(height: 25,),
 
               ],
             ),

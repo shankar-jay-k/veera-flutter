@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       title: 'Veera Education',
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.light, // Set the theme to light
-       theme: ThemeData(
+      theme: ThemeData(
         fontFamily: 'arial', ),
       home:   SplashScreen(),
     );

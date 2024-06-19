@@ -49,8 +49,8 @@ class _LoadingCustomTitleWidgetState extends State<LoadingCustomTitleWidget> {
             SizedBox(
                 width:30,height:30,child: CircularProgressIndicator(color: appColors.lightGold,)),
             Padding(
-                padding: EdgeInsets.only(left: 30),
-                child: Text('${widget.title}',style: TextStyle(fontFamily: 'poppins-medium'),),)
+                padding: EdgeInsets.only(left: 10),
+                child: Text('${widget.title}',style: TextStyle(fontFamily: 'poppins-medium',fontSize: screenUtils.getScreenWidth(context) > 500 ? 14 : 13),),)
           ],
         ),
       ),

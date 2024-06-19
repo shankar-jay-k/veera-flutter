@@ -1,17 +1,17 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as  http;
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:veera_education_flutter/Controllers/Colors.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:veera_education_flutter/Controllers/apiCalls.dart';
 import 'package:veera_education_flutter/Models/CurvedUnderLine.dart';
 import 'package:veera_education_flutter/Models/LoadingWidget.dart';
-import 'package:veera_education_flutter/Views/Auth/SplashScreen.dart';
 import 'package:veera_education_flutter/Views/HomePage/ClassRoom/index.dart';
 import 'package:veera_education_flutter/Views/HomePage/Footer.dart';
 import 'package:veera_education_flutter/Views/HomePage/OurJourney.dart';
@@ -19,10 +19,11 @@ import 'package:veera_education_flutter/Views/HomePage/PlanDetails.dart';
 import 'package:veera_education_flutter/Models/Toasts.dart';
 import 'package:veera_education_flutter/Models/appBarButtons.dart';
 import 'package:platform_device_id/platform_device_id.dart';
+import 'package:veera_education_flutter/Views/HomePage/Profile/Profile.dart';
+import 'package:veera_education_flutter/testFile2.dart';
 import 'DemoClassCards.dart';
 import 'VeeraMethodWorks.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'dart:io';
 
 
 final userStorage = GetStorage();
@@ -44,6 +45,7 @@ class _HomePageState extends State<HomePage> {
   String osVersion = 'Unknown';
   String osType = 'Unknown';
 
+  bool permissionDenied = false;
   @override
   void initState() {
          // use this for getting unique device id,comment-out to use
@@ -51,6 +53,127 @@ class _HomePageState extends State<HomePage> {
          // initDeviceInfo();
     super.initState();
   }
+
+  Future<void> _requestPermission() async {
+    final status = await Permission.camera.request();
+    if (status.isGranted) {
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => QRScanner(),
+      ));
+    } else {
+
+        alertForAskingPermission();
+
+    }
+  }
+
+  alertForAskingPermission(){
+    showDialog(
+        barrierColor: Colors.black38,
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context){
+          return WillPopScope(
+            onWillPop: () => Future.value(false),
+            child: Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Container(
+                width: MediaQuery.of(context).size.width > 500 ? MediaQuery.of(context).size.width * 0.5 : MediaQuery.of(context).size.width * 0.7,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+                          color: appColors.ashGrey
+                      ),
+                      child: Center(
+                        child: Column(
+                          children: [
+                            Container(
+                                margin:EdgeInsets.all(15),
+                                decoration: BoxDecoration(
+                                    color: Colors.white70,
+                                    borderRadius: BorderRadius.circular(500)
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Icon(
+                                    Icons.priority_high_outlined,
+                                    color: appColors.lightGold,size:50,),
+                                )),
+                            Text("You've denied the permission for camera already.You must allow permission for camera to continue",style: TextStyle(fontFamily: 'Poppins-Medium',fontSize: 15, ),textAlign: TextAlign.center,),
+                            SizedBox(height: 5,),
+                            Text("(Settings > Permissions)",style: TextStyle(fontFamily: 'Poppins-Medium',fontSize: 13, ),textAlign: TextAlign.center,),
+                            SizedBox(height: 5,),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.vertical(bottom: Radius.circular(10)),
+                          color: Colors.white
+                      ),
+                      child: Row(
+                        children: [
+                          InkWell(
+                            onTap: (){
+                              Navigator.of(context).pop();
+
+                            },
+                            child: Container(
+                              margin: EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: appColors.error
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 18),
+                                child: Text('  Cancel  ',style: TextStyle(fontFamily: 'Poppins-SemiBold',color:Colors.white),),
+                              ),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () async {
+                              Navigator.of(context).pop();
+                              final status = await Permission.camera.request();
+                              if (status.isGranted) {
+
+                              } else if (status.isDenied || status.isPermanentlyDenied) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Camera permission is required to scan QR codes')),
+                                );
+                              }
+                            },
+                            child: Container(
+                              margin: EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: appColors.lightGold
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 18),
+                                child: Text('Proceed',style: TextStyle(fontFamily: 'Poppins-SemiBold',color: Colors.black),),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+    );
+
+  }
+
 
   Future<void> initDeviceInfo() async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
@@ -70,6 +193,9 @@ class _HomePageState extends State<HomePage> {
       });
     }
   }
+
+
+
   @override
   void dispose() {
     controller.dispose();
@@ -79,8 +205,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     // userStorage.erase();
-    //  print('userData : ${userStorage.read('token')}');
-    print('deviceName:${deviceName} , osVersion:${osVersion} , osType:${osType}');
+      print('userData : ${userStorage.read('token')}');
+    // print('deviceName:${deviceName} , osVersion:${osVersion} , osType:${osType}');
     return Scaffold(
       backgroundColor: appColors.scaffold,
       appBar: AppBar(
@@ -91,8 +217,7 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.only(top: 8.0,left: 25),
           child: Image.asset(
             'assets/images/newLogo.png',
-            width: MediaQuery.of(context).size.width * 0.43,
-
+            width: MediaQuery.of(context).size.width * 0.43, 
             fit: BoxFit.contain,
           ),
         ),
@@ -104,38 +229,211 @@ class _HomePageState extends State<HomePage> {
               title: 'Scan',
               icon: Icon(Icons.qr_code_scanner_outlined, color: Colors.black,),
               onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => QRScanner(),
-                ));
-
+                 _requestPermission();
 
               }
           ),
           appBarButton(
               title: 'Notify',
               icon: Icon(Icons.notifications_outlined, color: Colors.black,),
-              onTap: () {}
+              onTap: () {
+                // showDialog(
+                //   context: context,
+                //   builder: (context) => Dialog(
+                //     backgroundColor: Colors.transparent,
+                //     insetPadding: EdgeInsets.all(0),
+                //     child: Container(
+                //       width: MediaQuery.of(context).size.width,
+                //       height: MediaQuery.of(context).size.height,
+                //       decoration: BoxDecoration(
+                //         color: Colors.white,
+                //         borderRadius: BorderRadius.circular(0),
+                //       ),
+                //       child: Column(
+                //         mainAxisAlignment: MainAxisAlignment.spaceAround,
+                //         children: [
+                //           Image.asset(
+                //             'assets/images/last_active_session.jpg',
+                //             width: MediaQuery.of(context).size.width > 500
+                //                 ? MediaQuery.of(context).size.width * 0.7
+                //                 : MediaQuery.of(context).size.width * 0.8,
+                //           ),
+                //           Column(
+                //             children: [
+                //               Center(
+                //                 child: Text(
+                //                   'Confirmation',
+                //                   style: TextStyle(
+                //                     fontSize: MediaQuery.of(context).size.width > 500 ? 25 : 20,
+                //                     fontFamily: 'Poppins-Bold',
+                //                   ),
+                //                 ),
+                //               ),
+                //               SizedBox(height: 15),
+                //               Padding(
+                //                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                //                 child: Text(
+                //                   'Connecting to Veera`s web',
+                //                   style: TextStyle(fontFamily: 'Poppins-SemiBold'),
+                //                   textAlign: TextAlign.center,
+                //                 ),
+                //               ),
+                //             ],
+                //           ),
+                //           Column(
+                //             children: [
+                //               Container(
+                //                 decoration: BoxDecoration(
+                //                   borderRadius: BorderRadius.circular(20),
+                //                   color: Color(0x69e5e5e5),
+                //                 ),
+                //                 width: MediaQuery.of(context).size.width > 500
+                //                     ? MediaQuery.of(context).size.width * 0.5
+                //                     : MediaQuery.of(context).size.width * 0.8,
+                //                 child: Padding(
+                //                   padding: const EdgeInsets.all(12.0),
+                //                   child: Column(
+                //                     children: [
+                //                       Padding(
+                //                         padding: const EdgeInsets.all(8.0),
+                //                         child: Row(
+                //                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //                           children: [
+                //                             Text(
+                //                               'IP address :',
+                //                               style: TextStyle(
+                //                                 fontFamily: 'Poppins-Light',
+                //                                 fontSize: 16,
+                //                               ),
+                //                             ),
+                //                             Text(
+                //                               '135.456.65.6565',
+                //                               style: TextStyle(
+                //                                 fontFamily: 'Poppins-Medium',
+                //                                 fontSize: 16,
+                //                               ),
+                //                             ),
+                //                           ],
+                //                         ),
+                //                       ),
+                //                       Padding(
+                //                         padding: const EdgeInsets.all(8.0),
+                //                         child: Row(
+                //                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //                           children: [
+                //                             Text(
+                //                               'Location :',
+                //                               style: TextStyle(
+                //                                 fontFamily: 'Poppins-Light',
+                //                                 fontSize: 16,
+                //                               ),
+                //                             ),
+                //                             Text(
+                //                               'Srivilliputhur',
+                //                               style: TextStyle(
+                //                                 fontFamily: 'Poppins-Medium',
+                //                                 fontSize: 16,
+                //                               ),
+                //                             ),
+                //                           ],
+                //                         ),
+                //                       ),
+                //                       Padding(
+                //                         padding: const EdgeInsets.all(8.0),
+                //                         child: Row(
+                //                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //                           children: [
+                //                             Text(
+                //                               'Browser :',
+                //                               style: TextStyle(
+                //                                 fontFamily: 'Poppins-Light',
+                //                                 fontSize: 16,
+                //                               ),
+                //                             ),
+                //                             Text(
+                //                               'Chrome windows',
+                //                               style: TextStyle(
+                //                                 fontFamily: 'Poppins-Medium',
+                //                                 fontSize: 16,
+                //                               ),
+                //                             ),
+                //                           ],
+                //                         ),
+                //                       ),
+                //                     ],
+                //                   ),
+                //                 ),
+                //               ),
+                //               SizedBox(height: 35),
+                //
+                //               MaterialButton(
+                //                 minWidth: MediaQuery.of(context).size.width > 500
+                //                   ? MediaQuery.of(context).size.width * 0.5
+                //                   : MediaQuery.of(context).size.width * 0.8,
+                //                 height: 45,
+                //                 color: appColors.lightGold,
+                //                 onPressed: () {},
+                //                 child: Text(
+                //                   'AUTHORIZE',
+                //                   style: TextStyle(
+                //                     color: Colors.black,
+                //                     fontFamily: 'Poppins-Bold',
+                //                       letterSpacing: 1.5
+                //                   ),
+                //                 ),
+                //               ),
+                //               SizedBox(height: 10),
+                //               MaterialButton(
+                //                 minWidth:    MediaQuery.of(context).size.width > 500
+                //                     ? MediaQuery.of(context).size.width * 0.5
+                //                     : MediaQuery.of(context).size.width * 0.8,
+                //                 height: 45,
+                //                 color: appColors.ashGrey,
+                //                 onPressed: () {
+                //                   Navigator.of(context).pop();
+                //                 },
+                //                 child: Text(
+                //                   'CANCEL',
+                //                   style: TextStyle(
+                //                     color: Colors.black,
+                //                     letterSpacing: 1.5,
+                //                     fontFamily: 'Poppins-Bold',
+                //                   ),
+                //                 ),
+                //               ),
+                //             ],
+                //           ),
+                //           SizedBox(height: 35),
+                //           SizedBox(height: 35),
+                //         ],
+                //       ),
+                //     ),
+                //   ),
+                // );
+              }
           ),
           appBarButton(
               title: 'Profile',
               icon: Icon(Icons.account_circle_outlined, color: Colors.black,),
               onTap: (){
-               showDialog(
-                   context: context,
-                   builder: (context)=>AlertDialog(
-                     content: Text('Are you sure to logout?',style: TextStyle(fontFamily: 'Poppins-SemiBold'),),
-                     actions: [
-                       MaterialButton(color: Colors.red,child: Text('Cancel',style: TextStyle(fontFamily: 'Poppins-Medium',color: Colors.white),),onPressed: (){Navigator.of(context).pop();}),
-                       MaterialButton(color: Colors.green,child: Text('Logout',style: TextStyle(fontFamily: 'Poppins-Medium',color: Colors.white),),onPressed: (){
-                         Navigator.of(context).pop();
-                         userStorage.erase();
-                         Navigator.of(context).pushReplacement(MaterialPageRoute(
-                           builder: (context) => SplashScreen(),
-                         ));
-                       }),
-                     ],
-                   ));
-
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ProfilePage(),
+                ));
+               // showDialog(
+               //     context: context,
+               //     builder: (context)=>AlertDialog(
+               //       content: Text('Are you sure to logout?',style: TextStyle(fontFamily: 'Poppins-SemiBold'),),
+               //       actions: [
+               //         MaterialButton(color: Colors.red,child: Text('Cancel',style: TextStyle(fontFamily: 'Poppins-Medium',color: Colors.white),),onPressed: (){Navigator.of(context).pop();}),
+               //         MaterialButton(color: Colors.green,child: Text('Logout',style: TextStyle(fontFamily: 'Poppins-Medium',color: Colors.white),),onPressed: (){
+               //           Navigator.of(context).pop();
+               //           userStorage.erase();
+               //           Navigator.of(context).pushReplacement(MaterialPageRoute(
+               //             builder: (context) => SplashScreen(),
+               //           ));
+               //         }),
+               //       ],
+               //     ));
               }
           ),
         ],
@@ -144,10 +442,8 @@ class _HomePageState extends State<HomePage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-
-
            userStorage.read('paidUser') != null &&  userStorage.read('paidUser') ?
-           SizedBox(
+              SizedBox(
               width: double.infinity,
               child: Padding(
                 padding: const EdgeInsets.only(top: 20.0,bottom: 10,left: 20),
@@ -515,6 +811,7 @@ class _QRScannerState extends State<QRScanner> {
     }
   }
 
+
   @override
   void dispose() {
     controller?.dispose();
@@ -596,7 +893,7 @@ class _QRScannerState extends State<QRScanner> {
      print('response from qr authorize qr Api : ${response},   token is ${token}');
      if(response['meta']['code']  == 200){
        stopLoading(context);
-       successToast('${response['meta']['message']}');
+       successToast('Logged-in successfully');
 
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>HomePage()));
        setState(() {});
