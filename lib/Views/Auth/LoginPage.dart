@@ -58,7 +58,8 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _getPhoneNumbers() async {
     try {
       List<SimCard>? simCards = await MobileNumber.getSimCards;
-      if (simCards != null) {
+
+      if (simCards != null && simCards.length != 0 ) {
         _phoneNumbers = simCards.map((sim) => sim.number ?? 'No number').toList();
          showDialog(
              barrierDismissible: false,
@@ -142,7 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
                ),
              ));
       } else {
-       errorToast('You`ve no sim cards in your mobile');
+       errorToast('You`ve no sim cards in your device');
       }
     } catch (e) {
       print('Failed to get phone numbers: $e');
@@ -157,7 +158,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     print('screen width - ${MediaQuery.of(context).size.width}');
     return  Scaffold(
-      backgroundColor: appColors.scaffold,
+      backgroundColor: Colors.white,
       body: Container(
         height: MediaQuery.of(context).size.height,
         child: country == '' ?
@@ -206,6 +207,9 @@ class _LoginScreenState extends State<LoginScreen> {
                              child: ElevatedButton(
                              onPressed: () {
                                _requestPermissions();
+                               // setState(() {
+                               //   _phoneNumber.text = '9344451201';
+                               // });
                              },
                              child: Text('Choose your mobile number',style: TextStyle(fontFamily: 'poppins-bold',color:Colors.black,letterSpacing: 2,),),
                              style: ElevatedButton.styleFrom(
@@ -279,7 +283,7 @@ class _LoginScreenState extends State<LoginScreen> {
                          print('invalid');
                        }
                       },
-                      child: Text('Get OTP',style: TextStyle(fontFamily: 'poppins-bold',fontSize: 20,color:Colors.black,letterSpacing: 2,),),
+                      child: Text(widget.resendPhoneNumber == '' ? 'Get OTP' : 'Resend OTP',style: TextStyle(fontFamily: 'poppins-bold',fontSize: 20,color:Colors.black,letterSpacing: 2,),),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: appColors.lightGold,
                         shape: RoundedRectangleBorder(

@@ -23,8 +23,10 @@ class _PlanDetailsState extends State<PlanDetails> {
   int chosenPlanTotal = 0;
   double chosenPlanGst = 0;
   double total = 0;
-    String keyId = "rzp_test_gKANZdsNdLqaQs";
-    String keySecret = "3UFrNGkdLR9apMa3dOUE1jvh";
+  String keyId = "rzp_test_gKANZdsNdLqaQs";
+  String keySecret = "3UFrNGkdLR9apMa3dOUE1jvh";
+  bool _whatsappNumber = true;
+  bool _companyDetails = false;
 
   final _razorpay = Razorpay();
 
@@ -553,8 +555,10 @@ class _PlanDetailsState extends State<PlanDetails> {
                   MaterialButton(
                       color: appColors.lightGold,
                       onPressed: (){
-                        startLoading(context);
-                        createOrder();
+
+                          functionToRegisterUserDetails();
+                        // startLoading(context);
+                        // createOrder();
                       },
                       child: Text('PAY NOW',style: TextStyle(fontSize: 17,fontFamily: 'poppins-semibold',letterSpacing: 2,color: Colors.black),)                      ,)
                 ],
@@ -562,7 +566,207 @@ class _PlanDetailsState extends State<PlanDetails> {
             ),
           ),
         ),
+
       ],
     );
   }
+
+   functionToRegisterUserDetails() {
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context)=>
+              StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+                return Dialog(
+                    alignment: Alignment.center,
+                    backgroundColor: Colors.transparent,
+                    insetPadding: EdgeInsets.symmetric(horizontal:screenUtils.getScreenWidth(context) > 500 ? 20 : 5) ,
+                    child: Container(
+                        width: screenUtils.getScreenWidth(context) > 500 ? screenUtils.getScreenWidth(context) * 0.85  : screenUtils.getScreenWidth(context),
+                        height: screenUtils.getScreenHeight(context),
+                        decoration: BoxDecoration(
+                        ),
+                      child: Center(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.only(left: 15,right: 8,top: 10,bottom: 10),
+                                decoration: BoxDecoration(
+                                  color: Color(0xffe4e4e4),
+                                  borderRadius: BorderRadius.vertical(top: Radius.circular(20), bottom: Radius.circular(0)),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text('SignIn To Pay',style: TextStyle(fontFamily: 'poppins-semibold',fontSize: 18),),
+                                    IconButton(
+                                        onPressed: (){
+                                          Navigator.pop(context);
+                                        },
+                                        icon: Icon(Icons.close,color: Colors.red)
+                                    )
+                                  ],
+                                ),),
+                              Container(
+                                padding: EdgeInsets.all(8),
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color : Colors.white,
+                                  borderRadius: BorderRadius.vertical(bottom: Radius.circular(5))
+                                ),
+                                child: Column(
+                                  children: [
+                                    SizedBox(height: 15,),
+                                    textInputWidget(screenUtils.getScreenWidth(context) > 500 ? screenUtils.getScreenWidth(context) * 0.6  : screenUtils.getScreenWidth(context) * 0.85, 'Full name'),
+                                    textInputWidget(screenUtils.getScreenWidth(context) > 500 ? screenUtils.getScreenWidth(context) * 0.6  : screenUtils.getScreenWidth(context) * 0.85, 'Phone number'),
+                                    if(!_whatsappNumber)
+                                      textInputWidget(screenUtils.getScreenWidth(context) > 500 ? screenUtils.getScreenWidth(context) * 0.6  : screenUtils.getScreenWidth(context) * 0.85, 'Whatsapp number'),
+                                    InkWell(
+                                      onTap: (){
+                                        setState((){
+                                          _whatsappNumber = !_whatsappNumber;
+                                        });
+                                      },
+                                      child: Padding(
+                                        padding:  EdgeInsets.only(left: 8.0),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Checkbox(
+                                              activeColor: Color(0xffbe9f5d),
+                                              value: _whatsappNumber,
+                                              onChanged: (value) => {
+                                                setState((){
+                                                  _whatsappNumber = !_whatsappNumber;
+                                                })
+                                              },
+                                            ),
+                                            Text('Same for whatsapp number',style: TextStyle(color: Colors.black54,fontFamily: 'Poppins-Medium'),)
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    textInputWidget(screenUtils.getScreenWidth(context) > 500 ? screenUtils.getScreenWidth(context) * 0.6  : screenUtils.getScreenWidth(context) * 0.85, 'E-mail address'),
+                                    textInputWidget(screenUtils.getScreenWidth(context) > 500 ? screenUtils.getScreenWidth(context) * 0.6  : screenUtils.getScreenWidth(context) * 0.85, 'Country of residence'),
+                                    Container(
+                                      width: screenUtils.getScreenWidth(context) > 500 ? screenUtils.getScreenWidth(context) * 0.6  : screenUtils.getScreenWidth(context) * 0.85,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          textInputWidget(screenUtils.getScreenWidth(context) > 500 ? screenUtils.getScreenWidth(context) * 0.28  : screenUtils.getScreenWidth(context) * 0.40, 'State'),
+                                          textInputWidget(screenUtils.getScreenWidth(context) > 500 ? screenUtils.getScreenWidth(context) * 0.28  : screenUtils.getScreenWidth(context) * 0.40,  'City'),
+
+                                        ],
+                                      ),
+                                    ),
+                                    Container(
+                                      width: screenUtils.getScreenWidth(context) > 500 ? screenUtils.getScreenWidth(context) * 0.6  : screenUtils.getScreenWidth(context) * 0.85,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          textInputWidget(screenUtils.getScreenWidth(context) > 500 ? screenUtils.getScreenWidth(context) * 0.28  : screenUtils.getScreenWidth(context) * 0.40, 'Address'),
+                                          textInputWidget(screenUtils.getScreenWidth(context) > 500 ? screenUtils.getScreenWidth(context) * 0.28  : screenUtils.getScreenWidth(context) * 0.40,  'Pincode'),
+
+                                        ],
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: (){
+                                        setState((){
+                                          _companyDetails = !_companyDetails;
+                                        });
+                                      },
+                                      child: Padding(
+                                        padding:  EdgeInsets.only(left: 15.0),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Checkbox(
+                                              activeColor: Color(0xffbe9f5d),
+                                              value: _companyDetails,
+                                              onChanged: (value) => {
+                                                setState((){
+                                                  _companyDetails = !_companyDetails;
+                                                })
+                                              },
+                                            ),
+                                            Text('Add company details',style: TextStyle(color: Colors.black54,fontFamily: 'Poppins-Medium'),)
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    if(_companyDetails)
+                                    Column(
+                                        children: [
+                                          textInputWidget(screenUtils.getScreenWidth(context) > 500 ? screenUtils.getScreenWidth(context) * 0.6  : screenUtils.getScreenWidth(context) * 0.85, 'Company name'),
+                                          textInputWidget(screenUtils.getScreenWidth(context) > 500 ? screenUtils.getScreenWidth(context) * 0.6  : screenUtils.getScreenWidth(context) * 0.85, 'GST number'),
+                                        ],
+                                      ),
+                                    SizedBox(height: 50,),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        MaterialButton(
+                                          height: 45,
+                                          minWidth: screenUtils.getScreenWidth(context) > 500 ? 200 : screenUtils.getScreenWidth(context) * 0.40,
+                                          color: appColors.ashGrey,
+                                          child: Center(
+                                              child: Text('CANCEL',style: TextStyle(fontFamily: 'Poppins-SemiBold'),)),
+                                          onPressed: (){
+                                            Navigator.of(context).pop();
+                                            },
+                                        ),
+                                        SizedBox(width: screenUtils.getScreenWidth(context) * 0.04,),
+                                        MaterialButton(
+                                          height: 45,
+                                          minWidth: screenUtils.getScreenWidth(context) > 500 ? 200 : screenUtils.getScreenWidth(context) * 0.40,
+                                          color: appColors.lightGold,
+                                          child: Center(
+                                              child: Text('SAVE',style: TextStyle(fontFamily: 'Poppins-SemiBold'),)),
+                                          onPressed: (){
+                                            Navigator.of(context).pop();
+                                            startLoading(context);
+                                            createOrder();
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 20,)
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }
+              ));
+   }
+
+   textInputWidget(double width,String label,){
+    return  Container(
+      margin: EdgeInsets.symmetric(vertical: 5),
+      height:screenUtils.getScreenWidth(context) > 500 ? 50 : 45,
+      width: width,
+      child: TextFormField(
+        decoration: InputDecoration(
+          labelText: label,
+          floatingLabelStyle: TextStyle(color: Color(0xffbe9f5d),fontSize: 16),
+          labelStyle: TextStyle(fontFamily: "Poppins-Medium",color: Colors.black54,fontSize: 13),
+          enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(width: 1,color: Colors.black54)
+          ),
+          focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(width: 0.5,color: Color(0xffbe9f5d))
+          ),
+        ),
+
+      ),
+    );
+   }
 }

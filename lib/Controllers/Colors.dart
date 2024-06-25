@@ -7,6 +7,7 @@ class appColors {
   static const Color lightGold = Color(0xffe5d1aa);
   static const Color Shadow_Clr = Color(0x70e2e1e1);
   static const Color Shadow_Clr2 = Color(0x70b3b2b2);
+  static const Color lightGoldSec = Color(0xffd3b36e);
   static const Color error = Color.fromARGB(255, 255, 4, 4);
   static const Color success = Color.fromARGB(255, 30, 226, 27);
   static const Color white=Colors.white;

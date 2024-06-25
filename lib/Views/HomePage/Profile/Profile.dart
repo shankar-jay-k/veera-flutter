@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:veera_education_flutter/Controllers/Colors.dart';
 import 'package:veera_education_flutter/Views/HomePage/Profile/LinkDevice.dart';
 import 'package:veera_education_flutter/testFile.dart';
+import '../../Auth/SplashScreen.dart';
 
-
+final userStorage = GetStorage();
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
+
 
   @override
   Widget build(BuildContext context) {
@@ -97,15 +100,34 @@ class ProfilePage extends StatelessWidget {
                     ),
                   ),
                 ),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 12,vertical: 8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: appColors.error
-                  ),
-                  child: ListTile( 
-                    title: Text('Logout',style: TextStyle(color: Colors.white,fontFamily: 'Poppins-Bold'),),
-                    trailing: Icon(Icons.logout_outlined,color: appColors.white),
+                InkWell(
+                  onTap: (){
+                    showDialog(
+                        context: context,
+                        builder: (context)=>AlertDialog(
+                          content: Text('Are you sure to logout?',style: TextStyle(fontFamily: 'Poppins-SemiBold'),),
+                          actions: [
+                            MaterialButton(color: Colors.red,child: Text('Cancel',style: TextStyle(fontFamily: 'Poppins-Medium',color: Colors.white),),onPressed: (){Navigator.of(context).pop();}),
+                            MaterialButton(color: Colors.green,child: Text('Logout',style: TextStyle(fontFamily: 'Poppins-Medium',color: Colors.white),),onPressed: (){
+                              Navigator.of(context).pop();
+                              userStorage.erase();
+                              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                builder: (context) => SplashScreen(),
+                              ));
+                            }),
+                          ],
+                        ));
+                  },
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 12,vertical: 8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: appColors.error
+                    ),
+                    child: ListTile(
+                      title: Text('Logout',style: TextStyle(color: Colors.white,fontFamily: 'Poppins-Bold'),),
+                      trailing: Icon(Icons.logout_outlined,color: appColors.white),
+                    ),
                   ),
                 ),
               ],

@@ -237,179 +237,7 @@ class _HomePageState extends State<HomePage> {
               title: 'Notify',
               icon: Icon(Icons.notifications_outlined, color: Colors.black,),
               onTap: () {
-                // showDialog(
-                //   context: context,
-                //   builder: (context) => Dialog(
-                //     backgroundColor: Colors.transparent,
-                //     insetPadding: EdgeInsets.all(0),
-                //     child: Container(
-                //       width: MediaQuery.of(context).size.width,
-                //       height: MediaQuery.of(context).size.height,
-                //       decoration: BoxDecoration(
-                //         color: Colors.white,
-                //         borderRadius: BorderRadius.circular(0),
-                //       ),
-                //       child: Column(
-                //         mainAxisAlignment: MainAxisAlignment.spaceAround,
-                //         children: [
-                //           Image.asset(
-                //             'assets/images/last_active_session.jpg',
-                //             width: MediaQuery.of(context).size.width > 500
-                //                 ? MediaQuery.of(context).size.width * 0.7
-                //                 : MediaQuery.of(context).size.width * 0.8,
-                //           ),
-                //           Column(
-                //             children: [
-                //               Center(
-                //                 child: Text(
-                //                   'Confirmation',
-                //                   style: TextStyle(
-                //                     fontSize: MediaQuery.of(context).size.width > 500 ? 25 : 20,
-                //                     fontFamily: 'Poppins-Bold',
-                //                   ),
-                //                 ),
-                //               ),
-                //               SizedBox(height: 15),
-                //               Padding(
-                //                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                //                 child: Text(
-                //                   'Connecting to Veera`s web',
-                //                   style: TextStyle(fontFamily: 'Poppins-SemiBold'),
-                //                   textAlign: TextAlign.center,
-                //                 ),
-                //               ),
-                //             ],
-                //           ),
-                //           Column(
-                //             children: [
-                //               Container(
-                //                 decoration: BoxDecoration(
-                //                   borderRadius: BorderRadius.circular(20),
-                //                   color: Color(0x69e5e5e5),
-                //                 ),
-                //                 width: MediaQuery.of(context).size.width > 500
-                //                     ? MediaQuery.of(context).size.width * 0.5
-                //                     : MediaQuery.of(context).size.width * 0.8,
-                //                 child: Padding(
-                //                   padding: const EdgeInsets.all(12.0),
-                //                   child: Column(
-                //                     children: [
-                //                       Padding(
-                //                         padding: const EdgeInsets.all(8.0),
-                //                         child: Row(
-                //                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //                           children: [
-                //                             Text(
-                //                               'IP address :',
-                //                               style: TextStyle(
-                //                                 fontFamily: 'Poppins-Light',
-                //                                 fontSize: 16,
-                //                               ),
-                //                             ),
-                //                             Text(
-                //                               '135.456.65.6565',
-                //                               style: TextStyle(
-                //                                 fontFamily: 'Poppins-Medium',
-                //                                 fontSize: 16,
-                //                               ),
-                //                             ),
-                //                           ],
-                //                         ),
-                //                       ),
-                //                       Padding(
-                //                         padding: const EdgeInsets.all(8.0),
-                //                         child: Row(
-                //                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //                           children: [
-                //                             Text(
-                //                               'Location :',
-                //                               style: TextStyle(
-                //                                 fontFamily: 'Poppins-Light',
-                //                                 fontSize: 16,
-                //                               ),
-                //                             ),
-                //                             Text(
-                //                               'Srivilliputhur',
-                //                               style: TextStyle(
-                //                                 fontFamily: 'Poppins-Medium',
-                //                                 fontSize: 16,
-                //                               ),
-                //                             ),
-                //                           ],
-                //                         ),
-                //                       ),
-                //                       Padding(
-                //                         padding: const EdgeInsets.all(8.0),
-                //                         child: Row(
-                //                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //                           children: [
-                //                             Text(
-                //                               'Browser :',
-                //                               style: TextStyle(
-                //                                 fontFamily: 'Poppins-Light',
-                //                                 fontSize: 16,
-                //                               ),
-                //                             ),
-                //                             Text(
-                //                               'Chrome windows',
-                //                               style: TextStyle(
-                //                                 fontFamily: 'Poppins-Medium',
-                //                                 fontSize: 16,
-                //                               ),
-                //                             ),
-                //                           ],
-                //                         ),
-                //                       ),
-                //                     ],
-                //                   ),
-                //                 ),
-                //               ),
-                //               SizedBox(height: 35),
-                //
-                //               MaterialButton(
-                //                 minWidth: MediaQuery.of(context).size.width > 500
-                //                   ? MediaQuery.of(context).size.width * 0.5
-                //                   : MediaQuery.of(context).size.width * 0.8,
-                //                 height: 45,
-                //                 color: appColors.lightGold,
-                //                 onPressed: () {},
-                //                 child: Text(
-                //                   'AUTHORIZE',
-                //                   style: TextStyle(
-                //                     color: Colors.black,
-                //                     fontFamily: 'Poppins-Bold',
-                //                       letterSpacing: 1.5
-                //                   ),
-                //                 ),
-                //               ),
-                //               SizedBox(height: 10),
-                //               MaterialButton(
-                //                 minWidth:    MediaQuery.of(context).size.width > 500
-                //                     ? MediaQuery.of(context).size.width * 0.5
-                //                     : MediaQuery.of(context).size.width * 0.8,
-                //                 height: 45,
-                //                 color: appColors.ashGrey,
-                //                 onPressed: () {
-                //                   Navigator.of(context).pop();
-                //                 },
-                //                 child: Text(
-                //                   'CANCEL',
-                //                   style: TextStyle(
-                //                     color: Colors.black,
-                //                     letterSpacing: 1.5,
-                //                     fontFamily: 'Poppins-Bold',
-                //                   ),
-                //                 ),
-                //               ),
-                //             ],
-                //           ),
-                //           SizedBox(height: 35),
-                //           SizedBox(height: 35),
-                //         ],
-                //       ),
-                //     ),
-                //   ),
-                // );
+
               }
           ),
           appBarButton(
@@ -419,21 +247,6 @@ class _HomePageState extends State<HomePage> {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => ProfilePage(),
                 ));
-               // showDialog(
-               //     context: context,
-               //     builder: (context)=>AlertDialog(
-               //       content: Text('Are you sure to logout?',style: TextStyle(fontFamily: 'Poppins-SemiBold'),),
-               //       actions: [
-               //         MaterialButton(color: Colors.red,child: Text('Cancel',style: TextStyle(fontFamily: 'Poppins-Medium',color: Colors.white),),onPressed: (){Navigator.of(context).pop();}),
-               //         MaterialButton(color: Colors.green,child: Text('Logout',style: TextStyle(fontFamily: 'Poppins-Medium',color: Colors.white),),onPressed: (){
-               //           Navigator.of(context).pop();
-               //           userStorage.erase();
-               //           Navigator.of(context).pushReplacement(MaterialPageRoute(
-               //             builder: (context) => SplashScreen(),
-               //           ));
-               //         }),
-               //       ],
-               //     ));
               }
           ),
         ],
@@ -476,8 +289,7 @@ class _HomePageState extends State<HomePage> {
               options: CarouselOptions(
                 height: screenUtils.getScreenWidth(context) > 500 ?  250 : 180.0,
                 aspectRatio: MediaQuery.of(context).size.width,
-                autoPlay: true,
-                autoPlayCurve: Curves.fastOutSlowIn,
+                autoPlay: false,
                 enableInfiniteScroll: true,
                 autoPlayAnimationDuration: Duration(milliseconds: 800),
                 viewportFraction: 1,
@@ -820,58 +632,169 @@ class _QRScannerState extends State<QRScanner> {
 
    showScannedDataDetails(code) {
      controller?.dispose();
-    showDialog(
-        context: context,
-        builder: (context)=>AlertDialog(
-          title: Text('Confirmation',style: TextStyle(fontFamily: 'Poppins-SemiBold',decoration: TextDecoration.underline),),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('IP address',style: TextStyle(fontFamily: 'Poppins-Light' ),),
-                    Text('${code['details']['ip']}',style: TextStyle(fontFamily: 'Poppins-Medium'),),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Location',style: TextStyle(fontFamily: 'Poppins-Light' ),),
-                    Text('${getTextBeforeComma(code['details']['location'])}',style: TextStyle(fontFamily: 'Poppins-Medium'),),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Browser',style: TextStyle(fontFamily: 'Poppins-Light' ),),
-                    Text('${code['details']['browser']}',style: TextStyle(fontFamily: 'Poppins-Medium'),),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            MaterialButton(color: Colors.red,child: Text('Cancel',style: TextStyle(fontFamily: 'Poppins-Medium',color: Colors.white),),onPressed: (){
-              Navigator.of(context).pop();
-              startLoading(context);
-              functionToAuthorizeApp(false,code);
-            }),
-            MaterialButton(color: Colors.green,child: Text('Authorize',style: TextStyle(fontFamily: 'Poppins-Medium',color: Colors.white),),onPressed: (){
-              Navigator.of(context).pop();
-              startLoading(context);
-              functionToAuthorizeApp(true,code);
-            }),
-          ],
-        ));
+     showDialog(
+       context: context,
+       barrierDismissible: false,
+       builder: (context) => WillPopScope(
+         onWillPop: () => Future.value(false),
+         child: Dialog(
+           backgroundColor: Colors.transparent,
+           insetPadding: EdgeInsets.all(0),
+           child: Container(
+             width: MediaQuery.of(context).size.width,
+             height: MediaQuery.of(context).size.height,
+             decoration: BoxDecoration(
+               color: Colors.white,
+               borderRadius: BorderRadius.circular(0),
+             ),
+             child: Column(
+               mainAxisAlignment: MainAxisAlignment.spaceAround,
+               children: [
+                 Image.asset(
+                   'assets/images/last_active_session.jpg',
+                   width: MediaQuery.of(context).size.width > 500
+                       ? MediaQuery.of(context).size.width * 0.7
+                       : MediaQuery.of(context).size.width * 0.8,
+                 ),
+                 Column(
+                   children: [
+                     Center(
+                       child: Text(
+                         'Confirmation',
+                         style: TextStyle(
+                           fontSize: MediaQuery.of(context).size.width > 500 ? 25 : 20,
+                           fontFamily: 'Poppins-Bold',
+                         ),
+                       ),
+                     ),
+                     SizedBox(height: 15),
+                     Padding(
+                       padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                       child: Text(
+                         'Connecting to Veera`s web',
+                         style: TextStyle(fontFamily: 'Poppins-SemiBold'),
+                         textAlign: TextAlign.center,
+                       ),
+                     ),
+                   ],
+                 ),
+                 Column(
+                   children: [
+                     Container(
+                       decoration: BoxDecoration(
+                         borderRadius: BorderRadius.circular(20),
+                         color: Color(0x69e5e5e5),
+                       ),
+                       width: MediaQuery.of(context).size.width > 500
+                           ? MediaQuery.of(context).size.width * 0.5
+                           : MediaQuery.of(context).size.width * 0.8,
+                       child: Padding(
+                         padding: const EdgeInsets.all(12.0),
+                         child: Column(
+                           children: [
+                             Padding(
+                               padding: const EdgeInsets.all(8.0),
+                               child: Row(
+                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                 children: [
+                                   Text(
+                                     'IP address :',
+                                     style: TextStyle(
+                                       fontFamily: 'Poppins-Light',
+                                       fontSize: 16,
+                                     ),
+                                   ),
+                                   Text(
+                                     '${code['details']['ip']}',
+                                     style: TextStyle(
+                                       fontFamily: 'Poppins-Medium',
+                                       fontSize: 16,
+                                     ),
+                                   ),
+                                 ],
+                               ),
+                             ),
+
+                             Padding(
+                               padding: const EdgeInsets.all(8.0),
+                               child: Row(
+                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                 children: [
+                                   Text(
+                                     'Browser :',
+                                     style: TextStyle(
+                                       fontFamily: 'Poppins-Light',
+                                       fontSize: 16,
+                                     ),
+                                   ),
+                                   Text(
+                                     '${code['details']['browser']}',
+                                     style: TextStyle(
+                                       fontFamily: 'Poppins-Medium',
+                                       fontSize: 16,
+                                     ),
+                                   ),
+                                 ],
+                               ),
+                             ),
+                           ],
+                         ),
+                       ),
+                     ),
+                     SizedBox(height: 35),
+
+                     MaterialButton(
+                       minWidth: MediaQuery.of(context).size.width > 500
+                           ? MediaQuery.of(context).size.width * 0.5
+                           : MediaQuery.of(context).size.width * 0.8,
+                       height: 45,
+                       color: appColors.lightGold,
+                       onPressed: () {
+                         Navigator.of(context).pop();
+                         startLoading(context);
+                         functionToAuthorizeApp(true,code);
+                       },
+                       child: Text(
+                         'AUTHORIZE',
+                         style: TextStyle(
+                             color: Colors.black,
+                             fontFamily: 'Poppins-Bold',
+                             letterSpacing: 1.5
+                         ),
+                       ),
+                     ),
+                     SizedBox(height: 10),
+                     MaterialButton(
+                       minWidth:    MediaQuery.of(context).size.width > 500
+                           ? MediaQuery.of(context).size.width * 0.5
+                           : MediaQuery.of(context).size.width * 0.8,
+                       height: 45,
+                       color: appColors.ashGrey,
+                       onPressed: () {
+                         Navigator.of(context).pop();
+                         startLoading(context);
+                         functionToAuthorizeApp(false,code);
+                       },
+                       child: Text(
+                         'CANCEL',
+                         style: TextStyle(
+                           color: Colors.black,
+                           letterSpacing: 1.5,
+                           fontFamily: 'Poppins-Bold',
+                         ),
+                       ),
+                     ),
+                   ],
+                 ),
+                 SizedBox(height: 35),
+                 SizedBox(height: 35),
+               ],
+             ),
+           ),
+         ),
+       ),
+     );
+
    }
 
    functionToAuthorizeApp(isType,code) async {
